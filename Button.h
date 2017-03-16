@@ -1,7 +1,6 @@
 #ifndef BUTTON_LIBRARY_INCLUDED
 #define BUTTON_LIBRARY_INCLUDED
 
-#include <Arduino.h>
 #include <inttypes.h>
 
 class Button;
@@ -23,8 +22,9 @@ class Button {
   public:
 
     enum {
-        PULL_DOWN       = LOW,
-        PULL_UP         = HIGH,
+        PULL_DOWN       = 0,
+        PULL_UP         = 1,
+        INTERNAL_PULLUP = 2,
 
         DEFAULT_HOLD_TIME       = 500,
         DEFAULT_BOUNCE_DURATION = 20
@@ -33,14 +33,15 @@ class Button {
     /**
      *  Construct a button.
      *  'buttonPin' is the pin for this button to use.
-     *  'buttonMode' is the wiring of the button.
-     *      - A PULL_UP button goes HIGH when pressed. There is a resistors (10k) that ties it to ground when the button is open.
-     *      - A PULL_DOWN button goes to LOW when pressed. There is a resistor (10k) that ties it to logic when the button is open.
+     *  'resistor' is the wiring of the button.
+     *      - A PULL_DOWN resistor means the button is tied to ground, and the button connects to HIGH on close.
+     *      - A PULL_UP resistor is tied to Vcc, and the button connects to LOW on close.
+     *      - An INTERNAL_PULLUP uses the internal resistor, and the button connects to LOW on close.
      *  'debounceDuration' is how long it takes the button to settle, mechanically, when pressed.
      */
-    Button(uint8_t buttonPin=255, uint8_t buttonMode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
+    Button(uint8_t buttonPin=255, uint8_t resistor = PULL_DOWN, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
     
-    void init(uint8_t buttonPin, uint8_t buttonMode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
+    void init(uint8_t buttonPin, uint8_t resistor = PULL_DOWN, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
     const int pin() const {return myPin; }
 
     /** Process the button state change. Should be called from loop().
@@ -70,6 +71,7 @@ class Button {
     
   private: 
     bool stateChanged() const;
+    bool queryButtonDown() const;
 
     uint8_t             myPin;
     uint8_t             mode;

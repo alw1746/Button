@@ -17,6 +17,20 @@ Button::Button(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDuration
   init(buttonPin, buttonMode, _debounceDuration);
 }
 
+bool Button::queryButtonDown() const
+{
+  int pinState = digitalRead(myPin);
+  bool down = false;
+  if (mode == PULL_DOWN) {
+    down = (pinState == HIGH);
+  }
+  else {
+    // PULL_UP or INTERNAL_PULLUP
+    down = (pinState == LOW);
+  }
+  return down;
+}
+
 void Button::init(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDuration)
 {
 	myPin = buttonPin;
@@ -28,13 +42,18 @@ void Button::init(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDurat
   pressedStartTime = 0;
 
   if (myPin != 255) {
-    pinMode(myPin, INPUT);
-    bitWrite(state, BIT_CURRENT, (digitalRead(myPin) == mode));
+    if (mode == INTERNAL_PULLUP) {
+      pinMode(myPin, INPUT_PULLUP);
+    }
+    else {
+      pinMode(myPin, INPUT);
+    }
+    bitWrite(state, BIT_CURRENT, queryButtonDown());
 
-  #ifdef DEBUG_SERIAL
-    Serial.print("Button init:");
-    Serial.println(buttonPin);
-  #endif
+    #ifdef DEBUG_SERIAL
+      Serial.print("Button init:");
+      Serial.println(buttonPin);
+    #endif
   }
 }
 
@@ -55,7 +74,7 @@ void Button::process(void)
   if (bitRead(state, BIT_TEST_MODE))
     bitWrite(state, BIT_CURRENT, bitRead(state, BIT_TEST_PRESSED));
   else
-    bitWrite(state, BIT_CURRENT, (digitalRead(myPin) == mode));
+    bitWrite(state, BIT_CURRENT, queryButtonDown());
 
   // clear the hold, if it was set.
   bitWrite(state, BIT_HOLD_NOW, false);
