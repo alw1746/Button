@@ -61,6 +61,8 @@ class Button {
     
     void setHoldThreshold(uint32_t holdTime);
     const uint16_t holdThreshold() const { return holdEventThreshold; }
+    void setHoldRepeat(bool holdRepeats);
+    const bool holdRepeats() const { return m_holdRepeats; }
 
     // For testing - do not call in normal use.
     const ButtonCBHandlers* queryHandlers() const { return handlers; }
@@ -71,6 +73,8 @@ class Button {
   private: 
     bool stateChanged() const;
 
+    bool                m_holdRepeats;
+    uint8_t             m_holdTriggers;
     uint8_t             myPin;
     uint8_t             mode;
     uint8_t             state;

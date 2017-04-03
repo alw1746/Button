@@ -19,6 +19,7 @@ Button::Button(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDuration
 
 void Button::init(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDuration)
 {
+  m_holdRepeats = false;
 	myPin = buttonPin;
   mode = buttonMode;
   state = 0;
@@ -103,9 +104,12 @@ void Button::process(void)
     // State did NOT change.
     bitWrite(state, BIT_CHANGED, false);
 
-    // should we trigger an onHold event? If so - only trigger one!
+    // should we trigger an onHold event? If so - trigger once unless hold repeating.
+    if (m_holdRepeats) {
+
+    }
+    else {
     if (isDown() && !bitRead(state, BIT_HOLD_TRIGGERED)) 
-    {
       if (pressedStartTime && (currentMillis - pressedStartTime > uint32_t(holdEventThreshold))) 
       { 
         #ifdef DEBUG_SERIAL
@@ -120,6 +124,8 @@ void Button::process(void)
           handlers->cb_onHold(*this);
         } 
       }
+    }
+
     }
   }
 }
