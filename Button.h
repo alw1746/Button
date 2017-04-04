@@ -42,7 +42,7 @@ public:
 
     void init(uint8_t buttonPin, uint8_t buttonMode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
     const int pin() const {
-        return myPin;
+        return m_myPin;
     }
 
     /** Process the button state change. Should be called from loop().
@@ -60,21 +60,32 @@ public:
     uint32_t holdTime() const;
     /// return the last time the button was pressed down
     uint32_t pressedTime() const {
-        return pressedStartTime;
+        return m_pressedStartTime;
     }
 
     void setHoldThreshold(uint32_t holdTime);
     const uint16_t holdThreshold() const {
-        return holdEventThreshold;
+        return m_holdEventThreshold;
     }
+
+    /** If false (the default) only one hold event is set.
+      * If true the a hold event is sent every holdTime()
+      */
     void setHoldRepeat(bool holdRepeats);
+
+    /// Return true of the hold event repeats.
     const bool holdRepeats() const {
         return m_holdRepeats;
     }
 
+    /** If a repeating hold, returns the number of holds 
+      * times. The first is '1'.
+      */
+    int nHolds() const { return m_nHolds; }
+
     // For testing - do not call in normal use.
     const ButtonCBHandlers* queryHandlers() const {
-        return handlers;
+        return m_handlers;
     }
     void enableTestMode(bool testMode);
     void testPress();
@@ -84,17 +95,17 @@ private:
     bool stateChanged() const;
 
     bool                m_holdRepeats;
-    uint8_t             m_holdTriggers;
-    uint8_t             myPin;
-    uint8_t             mode;
-    uint8_t             state;
-    uint16_t            holdEventThreshold;
-    uint16_t            debounceDuration;
-    uint32_t            pressedStartTime;
-    uint32_t            debounceStartTime;
+    uint8_t             m_myPin;
+    uint8_t             m_mode;
+    uint8_t             m_state;
+    uint16_t            m_nHolds;
+    uint16_t            m_holdEventThreshold;
+    uint16_t            m_debounceDuration;
+    uint32_t            m_pressedStartTime;
+    uint32_t            m_debounceStartTime;
 
 protected:
-    const ButtonCBHandlers* handlers;
+    const ButtonCBHandlers* m_handlers;
 };
 
 
@@ -104,10 +115,10 @@ protected:
  */
 class ButtonCB : public Button {
 public:
-    ButtonCB(uint8_t buttonPin=255, uint8_t buttonMode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION) :
-        Button(buttonPin, buttonMode, debounceDuration)
+    ButtonCB(uint8_t buttonPin=255, uint8_t buttonm_Mode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION) :
+        Button(buttonPin, buttonm_Mode, debounceDuration)
     {
-        handlers = &handlerData;
+        m_handlers = &m_handlerData;
     }
 
     /** Every button press generates 'press' and 'release'.
@@ -119,7 +130,7 @@ public:
     void holdHandler(buttonEventHandler handler);
 
 private:
-    ButtonCBHandlers handlerData;
+    ButtonCBHandlers m_handlerData;
 };
 
 #endif // BUTTON_LIBRARY_INCLUDED
