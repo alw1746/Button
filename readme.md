@@ -1,21 +1,25 @@
 # Button Library
 
 The Button library for Arduino makes common button tasks simple, filters
-out mechanical noise, and adds some handy extra features. Solid, dependable
-button handling is surprisingly difficult, so let this library help!
+out mechanical noise, and adds some handy extra features. Solid, dependable,
+and easy to use button handling is surprisingly difficult, and this 
+library is here to help.
 
 ## Features
 
 * De-bouncing. Mechanical buttons physically vibrate - bounce - when
   they are first pressed or released. This creates spurious state changes
   that need to be filtered or "de-bounced".
-* Support for pull-up or pull-down configurations. 
-  * A pull-up button is normally tied to ground with a 10k resistor. When
-    pressed, it connects to positive.
-  * A pull-down button is normally tied to positive with a 10k resistor.
-    When pressed, it connects to ground.
-	
-	Button button(12, Button::PULL_UP);
+* Support for pull-up, pull-down, or internal-pull-up configurations. 
+  * A pull-down button is tied to ground with a resistor (usually about
+    10k), so the pin is normally LOW. When it closes, the button connects
+    to Vcc and goes HIGH.
+  * A pull-up button is normally tied to positive with a resistor (usually
+    10k), so the pin is normally HIGH. When it closes, the button connects
+    to ground and goes LOW.
+  * An internal-pull-up button is just like the pull-up, but uses an internal
+    resistor on the Arduino. These are very convenient to use, as the button
+    just needs to close the connection to ground.
 
 * Queries for 'press', 'down', and 'held'. Queries are checked after the `process()`
   method is called.
