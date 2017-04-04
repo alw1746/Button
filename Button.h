@@ -92,8 +92,8 @@ protected:
  */
 class ButtonCB : public Button {
 public:
-    ButtonCB(uint8_t buttonPin=255, uint8_t buttonMode = PULL_UP, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION) :
-        Button(buttonPin, buttonMode, debounceDuration)
+    ButtonCB(uint8_t buttonPin=255,  uint8_t resistor = PULL_DOWN, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION) :
+        Button(buttonPin, resistor, debounceDuration)
     {
         handlers = &handlerData;   
     }
@@ -101,10 +101,10 @@ public:
     /** Every button press generates 'press' and 'release'.
       * It may also generate a 'click' or a 'hold'.
       */
-    void pressHandler(buttonEventHandler handler);
-    void releaseHandler(buttonEventHandler handler);
-    void clickHandler(buttonEventHandler handler);
-    void holdHandler(buttonEventHandler handler);
+    void setPressHandler(buttonEventHandler handler);
+    void setReleaseHandler(buttonEventHandler handler);
+    void setClickHandler(buttonEventHandler handler);
+    void setHoldHandler(buttonEventHandler handler);
 
 private:
     ButtonCBHandlers handlerData;
