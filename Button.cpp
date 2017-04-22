@@ -115,10 +115,12 @@ void Button::process(void)
                 m_nHolds = count;
 
                 bitWrite(m_state, BIT_HOLD_TRIGGERED, true);
-                bitWrite(m_state, BIT_HOLD_NOW, true);
 
-                if (m_handlers && m_handlers->cb_onHold && (!wasHoldTriggered || m_holdRepeats)) {
-                    m_handlers->cb_onHold(*this);
+                if (!wasHoldTriggered || m_holdRepeats) {
+                    bitWrite(m_state, BIT_HOLD_NOW, true);
+                    if (m_handlers && m_handlers->cb_onHold) {
+                        m_handlers->cb_onHold(*this);
+                    }
                 }
             }
         }
