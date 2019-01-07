@@ -1,5 +1,5 @@
 /** 
- *  Demonstration of how to use the button in query mode.
+ *  Demonstration of how to use the button in query mode(STM32).
  */
 
 #include <Button.h>
@@ -7,14 +7,22 @@
 /* Pin, Mode
    - A PULL_DOWN resistor means the button is tied to ground, and the button connects to HIGH on close.
    - A PULL_UP resistor is tied to Vcc, and the button connects to LOW on close.
-   - An INTERNAL_PULLUP uses the internal resistor, and the button connects to LOW on close.
+   - An INTERNAL_PULLDOWN uses the internal resistor, and the button connects to HIGH on close.
+     +---->PA0
+     |
+     \
+     |
+     +---->3.3V
 */
-Button button(8, Button::INTERNAL_PULLUP);
+
+Button button(PA0, Button::INTERNAL_PULLDOWN);
+
+#define Serial Serial1
 
 void setup() {
-  Serial.begin(19200);
+  Serial.begin(115200);
   Serial.println("Button Event Demo");
-  pinMode(13, OUTPUT);
+  pinMode(PA0, OUTPUT);
 }
 
 void loop() {
@@ -26,6 +34,6 @@ void loop() {
   if (button.held()) {
     Serial.println("LOG: Held");
   }
-  digitalWrite(13, button.isDown());
+  digitalWrite(LED_BUILTIN, button.isDown());
 }
  
