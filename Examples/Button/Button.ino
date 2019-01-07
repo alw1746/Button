@@ -1,5 +1,5 @@
 /** 
- *  Demonstration of how to use the button in query mode.
+ *  Demonstration of how to use the button in query mode(Arduino).
  */
 
 #include <Button.h>
