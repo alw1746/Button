@@ -25,7 +25,9 @@ public:
         PULL_DOWN       = 0,
         PULL_UP         = 1,
         INTERNAL_PULLUP = 2,
-
+#ifdef __STM32F1__
+        INTERNAL_PULLDOWN = 3,
+#endif
         DEFAULT_HOLD_TIME       = 500,
         DEFAULT_BOUNCE_DURATION = 20
     };
@@ -37,6 +39,9 @@ public:
      *      - A PULL_DOWN resistor means the button is tied to ground, and the button connects to HIGH on close.
      *      - A PULL_UP resistor is tied to Vcc, and the button connects to LOW on close.
      *      - An INTERNAL_PULLUP uses the internal resistor, and the button connects to LOW on close.
+#ifdef __STM32F1__
+     *      - An INTERNAL_PULLDOWN uses the internal resistor, and the button connects to HIGH on close.
+#endif
      *  'debounceDuration' is how long it takes the button to settle, mechanically, when pressed.
      */
     Button(uint8_t buttonPin=255, uint8_t resistor = PULL_DOWN, uint16_t debounceDuration = DEFAULT_BOUNCE_DURATION);
