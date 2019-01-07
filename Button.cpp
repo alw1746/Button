@@ -19,7 +19,11 @@ bool Button::queryButtonDown() const
 {
     int pinState = digitalRead(m_myPin);
     bool down = false;
+#ifdef __STM32F1__
+    if (m_mode == PULL_DOWN ||m_mode == INTERNAL_PULLDOWN ) {
+#else
     if (m_mode == PULL_DOWN) {
+#endif
         down = (pinState == HIGH);
     }
     else {
@@ -45,6 +49,11 @@ void Button::init(uint8_t buttonPin, uint8_t buttonMode, uint16_t _debounceDurat
         if (m_mode == INTERNAL_PULLUP) {
             pinMode(m_myPin, INPUT_PULLUP);
         }
+#ifdef __STM32F1__
+        else if (m_mode == INTERNAL_PULLDOWN) {
+            pinMode(m_myPin, INPUT_PULLDOWN);
+        }
+#endif
         else {
             pinMode(m_myPin, INPUT);
         }
