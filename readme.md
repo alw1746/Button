@@ -1,5 +1,9 @@
 # Button Library
 
+Modifications to original code:
+-  Add conditionals `__STM32F1__` to build for STM32 controllers.
+- Add new constant INTERNAL_PULLDOWN for STM32.
+
 The Button library for Arduino makes common button tasks simple, filters
 out mechanical noise, and adds some handy extra features. Solid, dependable,
 and easy to use button handling is surprisingly difficult, and this 
