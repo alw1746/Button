@@ -5,7 +5,7 @@
 #include <Button.h>
 
 /* Pin, Mode
-   - A PULL_DOWN resistor means the button is tied to ground, and the button connects to HIGH on close.
+   - A PULL_DOWN resistor is tied to ground, and the button connects to HIGH on close.
    - A PULL_UP resistor is tied to Vcc, and the button connects to LOW on close.
    - An INTERNAL_PULLDOWN uses the internal resistor, and the button connects to HIGH on close.
      +---->PB6
